@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Author Samhaa R. El-Beltagy
+# Version 1.0
+
 import re
 import codecs
 
@@ -35,12 +39,13 @@ def getCount(d, key):
 
 
 def genNgramsInBuckets(txt, grams):
-    #Takes as input some text represented as a list, and generates all possible ngrams based on the grams given as a parameter. 
-    #The function returns a list of dictionaries of size 'grams'. The first entry represents the list of all uni-grams and their counts, 
-    #The secong, all uni-grams and their counts, and so on. 
+    #Takes as input some text represented as a list, and generates all possible (uni-grams to n-grams) ngrams based on the grams parameter. 
+    #The function returns a list of dictionaries of size 'grams'. The first entry represents the dict of all uni-grams and their counts, 
+    #The second, all bi-grams and their counts, and so on. 
     #This works on any text, not just Arabic.  For example given the following code:
     #     x ="test to test the function".split()
     #     v =ArUtils.genNgramsInBuckets(x,3)
+    #     print(v)
     #The output will be:
     #     [{'test': 2, 'to': 1, 'the': 1, 'function': 1}, {'test to': 1, 'to test': 1, 'test the': 1, 'the function': 1},
     #      {'test to test': 1, 'to test the': 1, 'test the function': 1}]
@@ -73,6 +78,17 @@ def genNgramsInBuckets(txt, grams):
     return result 
 
 def genNgrams(txt, grams):
+    #Takes as input some text represented as a list, and generates all possible (uni-grams to n-grams) ngrams based on the grams parameter.
+    #The function returns a dictionary of the generated n-grams and their counts.
+    #The secong, all uni-grams and their counts, and so on. 
+    #     x ="test to test the function".split()
+    #     v =ArUtils.genNgrams(x,3)
+    #     print(v)
+    #The output will be:
+    #     {'test': 2, 'to': 1, 'test to': 1, 'to test': 1, 'test to test': 1, 'the': 1, 'test the': 1, 'to test the': 1, 
+    #      'function': 1, 'the function': 1, 'test the function': 1}
+
+    
     result = {}
 
     cnt = 0
@@ -95,12 +111,16 @@ def genNgrams(txt, grams):
         cnt = cnt + 1
     return result 
 
-def getContents(fname, normalize=True, removeTaskeel=True):
+def getContents(fname, normalize=True, removeTashkeel=True):
+    #Simply reads the contents of a utf-encocded Arabic file and returns them as a string
+    #There two optional parameters allow the user to configure whether s/he wants the contents
+    #normalized and diacritics (Tashkeel) removed or not.
+    
     f = codecs.open(fname, "r", "utf-8")
     #f = open(fname, "r")
     contents  = f.read()
     if normalize:
         contents = normalizeText(contents)
-    if removeTaskeel:
+    if removeTashkeel:
         contents = removeTashkeel(contents)
     return contents
